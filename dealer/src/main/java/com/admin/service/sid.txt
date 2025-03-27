@@ -1,0 +1,122 @@
+package com.student.student_crud.service;
+
+import com.student.student_crud.entity.AddUserEntity;
+
+import com.student.student_crud.repo.AddUserRepo;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.stereotype.Service;
+
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+
+
+@Service
+
+public class LoginService {
+
+    @Autowired
+
+    public AddUserRepo addUserEntityRepo;
+
+    private static final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+
+//    public AddUserEntity getUserLogin(AddUserEntity addUserEntity) {
+
+//        AddUserEntity userIDData = addUserEntityRepo.findByIdAndPasswordAndZId(addUserEntity.getzID(), addUserEntity.getUserID(), addUserEntity.getUserPassword());
+
+//        System.out.println(userIDData.toString());
+
+//        if (userIDData != null) {
+
+//            System.out.println("output from controller" + userIDData);
+
+//            if (passwordEncoder.matches(addUserEntity.getUserPassword(), userIDData.getUserPassword())) {
+
+//                // Passwords match, return the user
+
+//                return userIDData;
+
+//            } else {
+
+//                return null;
+
+//            }
+
+//        }
+
+//        return null;
+
+//
+
+//    }
+
+//
+
+//
+
+//    public AddUserEntity updatePassword(AddUserEntity addUserEntity) {
+
+//        AddUserEntity userPasswordDB = addUserEntityRepo.updateUserPassword(addUserEntity.getzID(), addUserEntity.getUserID());
+
+//        String userNewPassword = addUserEntity.getUserPassword();
+
+//        userPasswordDB.setUserPassword(userNewPassword);
+
+//        return addUserEntityRepo.save(userPasswordDB);
+
+//
+
+//    }
+
+
+    public AddUserEntity getUserLogin(AddUserEntity addUserEntity) {
+
+        // Fetch the user data from the database based on ZID and UserID
+
+        AddUserEntity userIDData = addUserEntityRepo.findByIdAndPasswordAndZId(
+
+                addUserEntity.getzID(), addUserEntity.getUserID(), addUserEntity.getUserPassword());
+
+        if (userIDData != null) {
+
+            // Now that we have the user, compare the hashed password from DB with the entered plaintext password
+
+            if (passwordEncoder.matches( userIDData.getUserPassword(),addUserEntity.getUserPassword())) {
+
+                // Passwords match, return the user
+
+                return userIDData;
+
+            } else {
+
+                // Passwords do not match
+
+                return null;
+
+            }
+
+        }
+
+        return null;  // User not found
+
+    }
+
+    public AddUserEntity updatePassword(AddUserEntity addUserEntity) {
+
+        AddUserEntity userPasswordDB = addUserEntityRepo.updateUserPassword(addUserEntity.getzID(), addUserEntity.getUserID());
+
+        // Assuming new password is in plain text and needs to be hashed
+
+        String userNewPassword = addUserEntity.getUserPassword();
+
+        userPasswordDB.setUserPassword(passwordEncoder.encode(userNewPassword));  // Encrypt new password
+
+        return addUserEntityRepo.save(userPasswordDB);  // Save the updated password to DB
+
+    }
+
+}
+
