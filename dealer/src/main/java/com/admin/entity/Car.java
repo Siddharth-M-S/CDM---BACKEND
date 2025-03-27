@@ -25,17 +25,13 @@ public class Car {
     private String brand;
     private String category;
 
-    public void setAvailable(String available) {
-        this.available = available;
-    }
+
 
     private BigDecimal price;
     private int year;
     private String available;
 
-    public String  getAvailable() {
-      return available;
-    }
+
 
 
 }

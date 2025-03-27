@@ -4,7 +4,6 @@ import com.admin.entity.*;
 import com.admin.exception.CustomException;
 import com.admin.repository.*;
 import com.admin.service.EmailService;
-import com.admin.service.car_service.CarServiceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
